@@ -8,10 +8,9 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import asciiPanel.AsciiPanel;
-import game.Nothing;
-import game.Player;
 import game.World;
 import game.bullet.Bullet;
+import game.creature.Player;
 import mainWindow.MainWindow;
 
 public class WorldScreen extends Screen {
@@ -24,8 +23,8 @@ public class WorldScreen extends Screen {
      * @param terminal
      */
     public WorldScreen(AsciiPanel terminal,MainWindow mainWindow,int playerType,int gameStage) {
-        super(terminal,mainWindow,AsciiPanel.floorIndex,gameStage);
-
+        super(terminal,mainWindow,gameStage);
+        terminal.backgroundImageIndex= AsciiPanel.stringCharMap.get(backgroundStringName[gameStage%backgroundStringName.length]);
         world = new World(playerType,gameStage);
         player=world.player;
         checkGameEnded();
@@ -35,7 +34,7 @@ public class WorldScreen extends Screen {
         TimerTask task=new TimerTask() {
             public void run(){
                 if(player.getHp()<=0){
-                    world.empty(player.getX(), player.getY());
+                    //world.empty(player.getX(), player.getY());
                     try{
                         TimeUnit.MILLISECONDS.sleep(4000);
                     }
@@ -64,7 +63,7 @@ public class WorldScreen extends Screen {
         }
         //EndPoint and Weapon
         if(world.monsterNumberLeft<=0)
-            terminal.write(AsciiPanel.endPointOpenIndex,world.map.getEndX(),world.map.getEndY());
+            terminal.write(AsciiPanel.stringCharMap.get("Destination"),world.map.getEndX(),world.map.getEndY());
         else{ //终点出现了就不显示武器了
             if(player.weapon.isVisible()){
                 terminal.write(player.weapon.getGlyph(),player.weapon.getX(),player.weapon.getY(),AsciiPanel.white);
@@ -76,14 +75,16 @@ public class WorldScreen extends Screen {
                 terminal.writeEffect((char)0, x, y);  //color unnecessary
             }
         }
-        Iterator<Bullet> iter=world.bullets.iterator();
-        Bullet bullet;
-        while(iter.hasNext()){
-            bullet=iter.next();
-            if(bullet.isVisible())
-                terminal.writeEffect(bullet.getGlyph(), bullet.getX(), bullet.getY());
-            else 
-                iter.remove();
+        synchronized(world.bullets){
+            Iterator<Bullet> iter=world.bullets.iterator();
+            Bullet bullet;
+            while(iter.hasNext()){
+                bullet=iter.next();
+                if(bullet.isVisible())
+                    terminal.writeEffect(bullet.getGlyph(), bullet.getX(), bullet.getY());
+                else 
+                    iter.remove();
+            }
         }
 
     //the DATA area
@@ -102,25 +103,8 @@ public class WorldScreen extends Screen {
     @Override
     public void respondToUserInput(KeyEvent key) {
         //System.out.println("a");
-        switch (key.getKeyCode()) {
-            case KeyEvent.VK_LEFT:
-                player.moveLeft();;
-                break;
-            case KeyEvent.VK_RIGHT:
-                player.moveRight();
-                break;
-            case KeyEvent.VK_UP:
-                player.moveUp();
-                break;
-            case KeyEvent.VK_DOWN:
-                player.moveDown();
-                break;
-            case KeyEvent.VK_SPACE:
-                player.attack();
-                break;
-            default:
-                break;
-        }
-        
+        synchronized(player){
+            player.keyEventBuffer.add(key);
+        }        
     }
 }

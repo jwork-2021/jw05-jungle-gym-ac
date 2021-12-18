@@ -13,16 +13,18 @@ import mainWindow.MainWindow;
 public abstract class Screen{
     AsciiPanel terminal;
     MainWindow mainWindow;
-    int gameStage;
+    protected int gameStage;
+    public static final String[] backgroundStringName={
+        "Soil","Grass","Water"
+    };
 
     /**
      * @param terminal
      */
-    public Screen(AsciiPanel terminal,MainWindow mainWindow,char backgroundImageIndex,int gameStage) {
+    public Screen(AsciiPanel terminal,MainWindow mainWindow,int gameStage) {
         this.terminal=terminal;
         this.mainWindow=mainWindow;
         this.gameStage=gameStage;
-        terminal.backgroundImageIndex=backgroundImageIndex;
     }
 
     /**
@@ -31,4 +33,8 @@ public abstract class Screen{
     abstract public void displayOutput();
 
     abstract public void respondToUserInput(KeyEvent key);
+
+    public int getGameStage(){
+        return gameStage;
+    }
 }

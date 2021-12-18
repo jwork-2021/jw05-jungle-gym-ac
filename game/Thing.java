@@ -2,6 +2,8 @@ package game;
 
 import java.awt.Color;
 
+import asciiPanel.AsciiPanel;
+
 public class Thing {
 
     protected World world;
@@ -20,9 +22,8 @@ public class Thing {
         this.tile = tile;
     }
 
-    protected Thing(char glyph, World world) {
+    protected Thing(World world) {
         //this.color = color;
-        this.glyph = glyph;
         this.world = world;
     }
 
@@ -35,7 +36,7 @@ public class Thing {
     protected char glyph;
 
     public char getGlyph() {
-        return this.glyph;
+        return AsciiPanel.stringCharMap.get(this.getClass().getSimpleName());//this.glyph;
     }
 
     public void getAttacked(int damage){

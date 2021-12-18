@@ -1,20 +1,22 @@
 package game.bullet;
 
 import asciiPanel.AsciiPanel;
-import game.Monster;
 import game.Nothing;
 import game.Thing;
 import game.World;
-import game.item.Weapon;
+import game.creature.Creature;
+import game.creature.Monster;
 
 public class Arrow extends Bullet{
     public static final int flyInterval=200;
+    protected char upGlyph,downGlyph,leftGlyph,rightGlyph;
+
     public Arrow(World world, int damage,int range,int direction,int x,int y){
         super(world, damage, range, direction, x, y,flyInterval);
-        this.upGlyph=AsciiPanel.upArrowIndex;
-        this.downGlyph=AsciiPanel.downArrowIndex;
-        this.leftGlyph=AsciiPanel.leftArrowIndex;
-        this.rightGlyph=AsciiPanel.rightArrowIndex;
+        upGlyph=AsciiPanel.stringCharMap.get(this.getClass().getSimpleName()+"Up");
+        downGlyph=AsciiPanel.stringCharMap.get(this.getClass().getSimpleName()+"Down");
+        leftGlyph=AsciiPanel.stringCharMap.get(this.getClass().getSimpleName()+"Left");
+        rightGlyph=AsciiPanel.stringCharMap.get(this.getClass().getSimpleName()+"Right");
     }
     @Override
     public void run() {
@@ -34,16 +36,16 @@ public class Arrow extends Bullet{
         } 
         //move
         switch(direction){
-            case Weapon.up:
+            case Creature.up:
                 y-=1;
                 break;
-            case Weapon.down:
+            case Creature.down:
                 y+=1;
                 break;
-            case Weapon.left:
+            case Creature.left:
                 x-=1;
                 break;
-            case Weapon.right:
+            case Creature.right:
                 x+=1;
                 break;
         }
@@ -70,4 +72,20 @@ public class Arrow extends Bullet{
             return;
         }
     }
+    @Override
+    public char getGlyph() {
+            switch(direction){
+                case Creature.up:
+                    return upGlyph;
+                case Creature.down:
+                    return downGlyph;
+                case Creature.left:
+                    return leftGlyph;
+                case Creature.right:
+                    return rightGlyph;
+                default:
+                    return rightGlyph;
+            }
+    }
+    
 }

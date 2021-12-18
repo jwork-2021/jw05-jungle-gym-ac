@@ -7,8 +7,8 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.LookupOp;
 import java.awt.image.ShortLookupTable;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,66 +23,28 @@ import javax.swing.JPanel;
 public class AsciiPanel extends JPanel {
     private static final long serialVersionUID = -4167851861147593092L;
 
-    public static Map<Character,String> glyphPathMap=new HashMap<Character,String>();
-    //TODO:cunstomize some characters
-    public static final char archerIndex=(char)128;
-    public static final char wizardIndex=(char)129; 
-
-    public static final char floorIndex=(char)130;
-    public static final char wallIndex=(char)131;
-    public static final char monsterIndex=(char)132;
-    //public static final char endPointClosedIndex=(char)227;
-    //public static final String endPointClosedPath="resources/close.png";
-    public static final char endPointOpenIndex= (char)133;
-
-    public static final char upBowIndex=(char)134;
-    public static final char downBowIndex=(char)135;
-    public static final char leftBowIndex=(char)136;
-    public static final char rightBowIndex=(char)137;
-
-    public static final char upArrowIndex=(char)138;
-    public static final char downArrowIndex=(char)139;
-    public static final char leftArrowIndex=(char)140;
-    public static final char rightArrowIndex=(char)141;
-
-    public static final char upWandIndex=(char)142;
-    public static final char downWandIndex=(char)143;
-    public static final char leftWandIndex=(char)144;
-    public static final char rightWandIndex=(char)145;
-
-    public static final char fireballIndex=(char)146;
-    public static final char fireIndex=(char)147;
-    public static final char electricIndex=(char)148;
+    public static Map<Character,String> charStringMap=new HashMap<Character,String>();
+    public static Map<String,Character> stringCharMap=new HashMap<String,Character>();
 
 
+    public static String[] glyphStrings={
+        "Cursor",
+        "Soil","Grass","Rock","Tree","Water","Castle","Destination",
+        "ArcherUp","ArcherDown","ArcherLeft","ArcherRight",
+        "WizardUp","WizardDown","WizardLeft","WizardRight",
+        "DemonUp","DemonDown","DemonLeft","DemonRight",
+        "GoblinUp","GoblinDown","GoblinLeft","GoblinRight",
+        "VampireUp","VampireDown","VampireLeft","VampireRight",
+        "BowUp","BowDown","BowLeft","BowRight",
+        "ArrowUp","ArrowDown","ArrowLeft","ArrowRight",
+        "WandUp","WandDown","WandLeft","WandRight",
+        "Fireball","Fire","Lightning","MagicBall"
+    };
     static{
-        glyphPathMap.put(archerIndex,"resources/elf.png" );
-        glyphPathMap.put(wizardIndex,"resources/wizard.png" );
-
-        glyphPathMap.put(floorIndex,"resources/floor.png");
-        glyphPathMap.put(wallIndex,"resources/rock.png");
-        glyphPathMap.put(monsterIndex,"resources/devil.png");
-        glyphPathMap.put(endPointOpenIndex,"resources/entrance.png");
-
-        glyphPathMap.put(upBowIndex,"resources/bowUp.png");
-        glyphPathMap.put(downBowIndex,"resources/bowDown.png");
-        glyphPathMap.put(leftBowIndex,"resources/bowLeft.png");
-        glyphPathMap.put(rightBowIndex,"resources/bowRight.png");
-
-        glyphPathMap.put(upArrowIndex,"resources/arrowUp.png");
-        glyphPathMap.put(downArrowIndex,"resources/arrowDown.png");
-        glyphPathMap.put(leftArrowIndex,"resources/arrowLeft.png");
-        glyphPathMap.put(rightArrowIndex,"resources/arrowRight.png");
-
-        glyphPathMap.put(upWandIndex,"resources/magicWandUpRight.png");
-        glyphPathMap.put(downWandIndex,"resources/magicWandDown.png");
-        glyphPathMap.put(leftWandIndex,"resources/magicWandLeft.png");
-        glyphPathMap.put(rightWandIndex,"resources/magicWandUpRight.png");
-
-        glyphPathMap.put(fireballIndex,"resources/fireball.png");
-        glyphPathMap.put(fireIndex, "resources/flame.png");
-        glyphPathMap.put(electricIndex,"resources/electricity.png");
-
+        for(int i=0;i<glyphStrings.length;i++){
+            charStringMap.put( (char)(123+i),glyphStrings[i]);
+            stringCharMap.put(glyphStrings[i],(char)(123+i));
+        }
     }
 
 
@@ -479,8 +441,9 @@ public class AsciiPanel extends JPanel {
                 int sx = (i % 16) * charWidth;
                 int sy = (i / 16) * charHeight;
                 glyphs[i] = new BufferedImage(charWidth, charHeight, BufferedImage.TYPE_INT_ARGB);
-                    if(glyphPathMap.containsKey((char)i)){
-                        custmoImage=ImageIO.read(AsciiPanel.class.getClassLoader().getResource(glyphPathMap.get((char)i)));
+                    if(charStringMap.containsKey((char)i)){
+                        custmoImage=ImageIO.read(AsciiPanel.class.getClassLoader().getResource(
+                            "resources/"+charStringMap.get((char)i)+".png"));
                         glyphs[i].getGraphics().drawImage(custmoImage,0, 0, charWidth, charHeight, 0, 0, charWidth,
                         charHeight, null);
                     }
@@ -814,15 +777,15 @@ public class AsciiPanel extends JPanel {
      * @return this for convenient chaining of method calls
      */
     public AsciiPanel writeEffect(char character, int x, int y) {
-        if (character < 0 || character >= glyphs.length)
-            throw new IllegalArgumentException(
-                    "character " + character + " must be within range [0," + glyphs.length + "].");
+        if (character < 0 || character >= glyphs.length)return this;
+            //throw new IllegalArgumentException(
+                    //"character " + character + " must be within range [0," + glyphs.length + "].");
 
-        if (x < 0 || x >= widthInCharacters)
-            throw new IllegalArgumentException("x " + x + " must be within range [0," + widthInCharacters + ")");
+        if (x < 0 || x >= widthInCharacters)return this;
+            //throw new IllegalArgumentException("x " + x + " must be within range [0," + widthInCharacters + ")");
 
-        if (y < 0 || y >= heightInCharacters)
-            throw new IllegalArgumentException("y " + y + " must be within range [0," + heightInCharacters + ")");
+        if (y < 0 || y >= heightInCharacters)return this;
+            //throw new IllegalArgumentException("y " + y + " must be within range [0," + heightInCharacters + ")");
 
         effects[x][y] = character;
         return this;

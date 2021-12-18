@@ -1,20 +1,16 @@
 package game.bullet;
 
 import asciiPanel.AsciiPanel;
-import game.Monster;
 import game.Nothing;
 import game.Thing;
 import game.World;
+import game.creature.Monster;
 
 public class Fire extends Bullet{
     public static final int flyInterval=100; //burn every 0.1s
-    public static final int fireLifetime=40; //last for 4s
+    public static final int fireLifetime=25; //last for 25*0.1s
     public Fire(World world, int damage,int direction,int x,int y){
         super(world, damage, fireLifetime, direction, x, y,flyInterval);
-        this.upGlyph=AsciiPanel.fireIndex;
-        this.downGlyph=AsciiPanel.fireIndex;
-        this.leftGlyph=AsciiPanel.fireIndex;
-        this.rightGlyph=AsciiPanel.fireIndex;
     }
     
     @Override
@@ -27,7 +23,7 @@ public class Fire extends Bullet{
         //HIT Something?
         Thing thing=world.get(x, y);
         if( !(thing instanceof Nothing)){
-            if(thing instanceof Monster)thing.getAttacked(damage);
+            if(thing instanceof Monster)thing.getAttacked(damage*1000/(fireLifetime*flyInterval)); //每秒伤害
         } 
         range-=1;
         //expired?

@@ -2,34 +2,40 @@ package game;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
-import java.util.TimerTask;
-import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import java.util.Timer;
 
-import asciiPanel.AsciiPanel;
 import game.bullet.Bullet;
-
-import java.awt.Color;
+import game.creature.Archer;
+import game.creature.Demon;
+import game.creature.Goblin;
+import game.creature.Monster;
+import game.creature.Player;
+import game.creature.Vampire;
+import game.creature.Wizard;
 import map.MyMap;
+import screen.Screen;
 
 public class World {
 
     public final int WIDTH = 26;
     public final int HEIGHT = 24;
+    protected int gameStage;
     public int monsterNumberLeft;
     public MyMap map;
     private Tile<Thing>[][] tiles;
     public Player player;
     public ArrayList<Bullet> bullets = new ArrayList<Bullet>();
+    private Random rand=new Random();
     
     //private Random rand = new Random();
     //private Color wallColor,floorColor;
 
     public World(int playerType,int gameStage) {
         map=new MyMap(WIDTH,HEIGHT,gameStage);
+        this.gameStage=gameStage;
+
 
         if (tiles == null) {
             tiles = new Tile[WIDTH][HEIGHT];
@@ -40,27 +46,39 @@ public class World {
                 tiles[i][j] = new Tile<>(i, j);
                 if(map.getType(i,j)==MyMap.tile)
                     tiles[i][j].setThing(new Nothing(this));
-                else
-                    tiles[i][j].setThing(new Wall(this));
+                else{
+                    switch(this.gameStage%Screen.backgroundStringName.length){
+                        case 0:
+                            tiles[i][j].setThing(new Rock(this));
+                            break;
+                        case 1:
+                            tiles[i][j].setThing(new Tree(this));
+                            break;
+                        case 2:
+                            tiles[i][j].setThing(new Castle(this));
+                            break;
+                        default:
+                            tiles[i][j].setThing(new Castle(this));
+                            break;
+                    }
+                }
             }
         }
     //player
-        player=new Player(this,playerType);
+        switch(playerType){
+            case Player.ARCHER:
+                player=new Archer(this);
+                break;
+            case Player.WIZARD:
+                player=new Wizard(this);
+                break;
+        }
+        
         Thread playerThread=new Thread(player);
         playerThread.start();
-        player.run();
+        
     //monsters
-        Monster monster;
-        monsterNumberLeft=map.monsterPositions.size();
-        if(monsterNumberLeft>0){
-            ExecutorService exec = Executors.newFixedThreadPool(map.monsterPositions.size());
-            for (Map.Entry<Integer,Integer> entry: map.monsterPositions.entrySet()){
-                monster=new Monster(this);
-                put(monster,entry.getKey(),entry.getValue());
-                exec.execute(monster);
-            }
-            exec.shutdown();
-        }
+        addMonsters();
     }
 
     public Thing get(int x, int y) {
@@ -74,7 +92,76 @@ public class World {
     public void empty(int x,int y){
         this.tiles[x][y].setThing(new Nothing(this));
     }
-    public void addBullet(Bullet bullet){
+    public synchronized void addBullet(Bullet bullet){
         bullets.add(bullet);
+    }
+    public int getGameStage(){
+        return gameStage;
+    }
+    public void addMonsters(){
+        //monsters
+        Monster monster;
+        monsterNumberLeft=map.monsterPositions.size();
+        if(map.monsterPositions.size()<=0)return;
+
+        boolean bossCreated=false;
+        
+        ExecutorService exec = Executors.newFixedThreadPool(map.monsterPositions.size());
+        for (Map.Entry<Integer,Integer> entry: map.monsterPositions.entrySet()){
+            switch(gameStage%Screen.backgroundStringName.length){
+                case 0:
+                    switch(rand.nextInt(2)){
+                        case 0:
+                            monster=new Demon(this);
+                            break;
+                        case 1:
+                            monster=new Goblin(this);
+                            break;
+                        default:
+                            monster=new Demon(this);
+                            break;
+                        }
+                    break;
+                case 1:
+                    switch(rand.nextInt(2)){
+                        case 0:
+                            monster=new Demon(this);
+                            break;
+                        case 1:
+                            monster=new Goblin(this);
+                            break;
+                        default:
+                            monster=new Demon(this);
+                            break;
+                        }
+                        break;
+                case 2:{
+                    if(!bossCreated){
+                        monster=new Vampire(this);
+                        bossCreated=true;
+                    }
+                    else{
+                        switch(rand.nextInt(2)){
+                            case 0:
+                                monster=new Demon(this);
+                                break;
+                            case 1:
+                                monster=new Goblin(this);
+                                break;
+                            default:
+                                monster=new Demon(this);
+                                break;
+                        }
+                    }
+                    break;
+                }
+                default:
+                    monster=new Demon(this);
+                    break;
+                }
+            put(monster,entry.getKey(),entry.getValue());
+            exec.execute(monster);
+            }
+        exec.shutdown();
     }
 }

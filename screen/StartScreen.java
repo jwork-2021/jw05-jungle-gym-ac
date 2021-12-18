@@ -1,7 +1,6 @@
 package screen;
 
 import asciiPanel.AsciiPanel;
-import game.World;
 import mainWindow.MainWindow;
 
 public class StartScreen extends RestartScreen {

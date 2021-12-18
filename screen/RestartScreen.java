@@ -1,8 +1,7 @@
 package screen;
 
 import asciiPanel.AsciiPanel;
-import game.Player;
-import game.World;
+import game.creature.Player;
 import mainWindow.MainWindow;
 
 import java.awt.event.KeyEvent;
@@ -47,17 +46,18 @@ public class RestartScreen extends Screen {
      * @param terminal
      */
     public RestartScreen(AsciiPanel terminal,MainWindow mainWindow,int state,int gameStage){
-        super(terminal,mainWindow,(char)0,gameStage);
+        super(terminal,mainWindow,gameStage);
+        terminal.backgroundImageIndex=(char)0;
         this.state=state;
 
         String icon="";
-        for(int i=0;i<6;i++)  icon+=Character.toString((char)AsciiPanel.archerIndex+i);
+        for(int i=0;i<6;i++)  icon+=Character.toString((char)AsciiPanel.stringCharMap.get(AsciiPanel.glyphStrings[0])+i);
         MessageList.put("icon",icon);
         MessageList.put("title", "Roguelike");
         MessageList.put("lose_message", "You DIED!!!Try STAGE "+Integer.toString(gameStage) +" AGAIN!");
         MessageList.put("win_message","You WIN!!! Challenge STAGE "+Integer.toString(gameStage)+"!");
-        MessageList.put("archer_message","Choose "+Character.toString(AsciiPanel.archerIndex)+" ->press A");
-        MessageList.put("wizard_message","Choose "+Character.toString(AsciiPanel.wizardIndex)+" ->press B");
+        MessageList.put("archer_message","Choose "+Character.toString(AsciiPanel.stringCharMap.get("ArcherDown"))+" ->press A");
+        MessageList.put("wizard_message","Choose "+Character.toString(AsciiPanel.stringCharMap.get("WizardDown"))+" ->press B");
         MessageList.put("exit_message", "CLOSE the terminal to EXIT...");
         
         //displayOutput();
