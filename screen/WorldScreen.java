@@ -88,8 +88,8 @@ public class WorldScreen extends Screen {
         }
 
     //the DATA area
-        for(int x=world.WIDTH;x<MainWindow.width;x++)
-            for(int y=0;y<MainWindow.height;y++){
+        for(int x=world.WIDTH;x<mainWindow.width;x++)
+            for(int y=0;y<mainWindow.height;y++){
                 terminal.write((char)0,x,y,AsciiPanel.white);
             }
         terminal.write("Stage "+Integer.toString(gameStage),world.WIDTH,0);

@@ -9,9 +9,9 @@ import game.bullet.MagicBall;
 public class Vampire extends Monster{
     private static final int HP= 2000;
     private static final int Damage=200;
-    private static final int ActionInterval= 1000;//in milliseconds
-    private static final int AttackCoolingCount=5;//5 actionIntervals
-    private int attackCoolingCount=4; //4 actionIntervals
+    private static final int ActionInterval= 500;//in milliseconds
+    private static final int AttackCoolingCount=10;//5 actionIntervals
+    private int attackCoolingCount=AttackCoolingCount; //4 actionIntervals
 
     public Vampire(World world){
         super(world, HP, Damage, ActionInterval);

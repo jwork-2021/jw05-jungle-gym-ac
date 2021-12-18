@@ -92,8 +92,10 @@ public class World {
     public void empty(int x,int y){
         this.tiles[x][y].setThing(new Nothing(this));
     }
-    public synchronized void addBullet(Bullet bullet){
-        bullets.add(bullet);
+    public void addBullet(Bullet bullet){
+        synchronized(bullets){
+            bullets.add(bullet);
+        }
     }
     public int getGameStage(){
         return gameStage;

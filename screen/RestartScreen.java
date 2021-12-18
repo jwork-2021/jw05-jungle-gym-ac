@@ -17,20 +17,20 @@ public class RestartScreen extends Screen {
     
     @Override
     public void displayOutput(){
-        for(int x=0;x<MainWindow.width;x++)
-        for(int y=0;y<MainWindow.height;y++){
+        for(int x=0;x<mainWindow.width;x++)
+        for(int y=0;y<mainWindow.height;y++){
             terminal.write((char)0,x,y,AsciiPanel.white);
         }
         //terminal.writeCenter(MessageList.get("icon"),MainWindow.height/2-4,AsciiPanel.green,AsciiPanel.white);
         //erminal.writeCenter(MessageList.get("title"),MainWindow.height/2-3,AsciiPanel.green,AsciiPanel.white);
         if(state==win)
-            terminal.writeCenter(MessageList.get("win_message"),MainWindow.height/2-1,AsciiPanel.green,AsciiPanel.white);
+            terminal.writeCenter(MessageList.get("win_message"),mainWindow.height/2-1,AsciiPanel.green,AsciiPanel.white);
         else
-            terminal.writeCenter(MessageList.get("lose_message"),MainWindow.height/2-1,AsciiPanel.green,AsciiPanel.white);
+            terminal.writeCenter(MessageList.get("lose_message"),mainWindow.height/2-1,AsciiPanel.green,AsciiPanel.white);
 
-        terminal.writeCenter(MessageList.get("archer_message"),MainWindow.height/2-0,AsciiPanel.green,AsciiPanel.white);
-        terminal.writeCenter(MessageList.get("wizard_message"),MainWindow.height/2+1,AsciiPanel.green,AsciiPanel.white);
-        terminal.writeCenter(MessageList.get("exit_message"),MainWindow.height/2+2,AsciiPanel.green,AsciiPanel.white);
+        terminal.writeCenter(MessageList.get("archer_message"),mainWindow.height/2-0,AsciiPanel.green,AsciiPanel.white);
+        terminal.writeCenter(MessageList.get("wizard_message"),mainWindow.height/2+1,AsciiPanel.green,AsciiPanel.white);
+        terminal.writeCenter(MessageList.get("exit_message"),mainWindow.height/2+2,AsciiPanel.green,AsciiPanel.white);
 
     }
         
