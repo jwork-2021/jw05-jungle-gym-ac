@@ -98,5 +98,10 @@ BOSS 占四个格子 在天上飞！周围一圈散射
 音乐：
 https://opengameart.org/content/4-chiptunes-adventure
 
+Maven构建：
+https://spring.io/guides/gs/maven/
+https://maven.apache.org/users/index.html
+https://newbedev.com/resources-and-config-loading-in-maven-project
+
 Boss:
 向player发射？
