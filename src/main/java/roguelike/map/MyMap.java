@@ -70,7 +70,13 @@ public class MyMap {
             }
         }
     }
-    public void generateMonsters(int gameStage){
+
+    /**
+     * 
+     * @param gameStage
+     * @return number of Monsters successfully generated
+     */
+    public int generateMonsters(int gameStage){
         int totalMonsterNumber=15+5*gameStage;
         int countMonsterNumber=totalMonsterNumber;
         for (int i = 0; i < width; i++) 
@@ -81,8 +87,9 @@ public class MyMap {
                     countMonsterNumber--;
                     monsterPositions.put(i,j);
                 }
-                if(countMonsterNumber==0)return;
+                if(countMonsterNumber==0)return totalMonsterNumber;
             }
+        return totalMonsterNumber-countMonsterNumber;
     }
     private int getDistance(int X1,int Y1,int X2,int Y2){
         return Math.abs(X1-X2)+Math.abs(Y1-Y2);

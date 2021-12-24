@@ -17,8 +17,8 @@ import roguelike.map.MyMap;
 import roguelike.screen.Screen;
 public class World {
 
-    public final int WIDTH = 30;
-    public final int HEIGHT = 30;
+    public static final int WIDTH = 30;
+    public static final int HEIGHT = 30;
     protected int gameStage;
     public int monsterNumberLeft;
     public MyMap map;

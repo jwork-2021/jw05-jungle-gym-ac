@@ -9,7 +9,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import roguelike.mainWindow.MainWindow;
-import roguelike.screen.RestartScreen;
+import roguelike.screen.ContinueScreen;
 
 public class BGM {
     
@@ -35,7 +35,7 @@ public class BGM {
     IOException, LineUnavailableException {
         stop();
         // create AudioInputStream object
-        if(mainWindow.getScreen() instanceof RestartScreen)
+        if(mainWindow.getScreen() instanceof ContinueScreen)
             audioInputStream = AudioSystem.getAudioInputStream(
                     getClass().getClassLoader().getResource(
                         "BGM/"+RestartScreenBGMPath+".wav"
@@ -65,5 +65,8 @@ public class BGM {
         if(clip.isOpen()){
             clip.close();
         }
+    }
+    public Clip getClip(){
+        return clip;
     }
 }

@@ -102,6 +102,27 @@ Maven构建：
 https://spring.io/guides/gs/maven/
 https://maven.apache.org/users/index.html
 https://newbedev.com/resources-and-config-loading-in-maven-project
+https://www.codenong.com/cs106568531/
 
 Boss:
 向player发射？
+
+
+
+
+单元测试：我深刻体会到了自己代码的不足，类中有大量的void方法，纯粹的side effect（只改变该类型对象的状态，无返回值）,难以测试效果；对于各种可能的异常情况都没有处理。还是一定程度上过程式编程的错误。   
+
+要遵循SOLID设计原则。
+类中的方法尽量不要是纯副作用！但大部分方法确实有副作用。因此叫做方法，而不叫函数。函数应该没有副作用。
+那么如何测试：对于纯副作用的void方法，调用后看一看对象方法是否改变。
+
+
+java unitTest
+How to Generate UnitTest:https://code.visualstudio.com/docs/java/java-testing
+UnitTest in Maven and Coverage Gutter:https://medium.com/@karlrombauts/setting-up-unit-testing-for-java-in-vs-code-with-maven-3dc75579122f
+JaCoco:https://www.baeldung.com/jacoco
+
+
+LATEX：
+https://www.programmerall.com/article/83671358413/
+https://www.cnblogs.com/li-minghao/p/10954487.html

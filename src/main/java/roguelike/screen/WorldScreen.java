@@ -22,8 +22,8 @@ public class WorldScreen extends Screen {
     /**
      * @param terminal
      */
-    public WorldScreen(AsciiPanel terminal,MainWindow mainWindow,int playerType,int gameStage) {
-        super(terminal,mainWindow,gameStage);
+    public WorldScreen(AsciiPanel terminal,MainWindow mainWindow,int playerType,int gameStage,int archiveNumber) {
+        super(terminal,mainWindow,gameStage,archiveNumber);
         terminal.backgroundImageIndex= AsciiPanel.stringCharMap.get(backgroundStringName[gameStage%backgroundStringName.length]);
         world = new World(playerType,gameStage);
         player=world.player;
@@ -31,19 +31,20 @@ public class WorldScreen extends Screen {
     }
 
     public void checkGameEnded(){
+        //TODO:kill all Threads in world
         TimerTask task=new TimerTask() {
             public void run(){
                 if(player.getHp()<=0){
                     //world.empty(player.getX(), player.getY());
                     try{
-                        TimeUnit.MILLISECONDS.sleep(4000);
+                        TimeUnit.MILLISECONDS.sleep(3000);
                     }
                     catch (InterruptedException e) { System.err.println("Interrupted");  }
-                    mainWindow.setScreen(new RestartScreen(terminal,mainWindow,RestartScreen.lose,gameStage));
+                    mainWindow.setScreen(new ContinueScreen(terminal,mainWindow,ContinueScreen.lose,gameStage,archiveNumber));
                     cancel();
                 }
                 else if(world.map.getEndX()==player.getX()&& world.map.getEndY()==player.getY() && world.monsterNumberLeft<=0){
-                    mainWindow.setScreen(new RestartScreen(terminal,mainWindow,RestartScreen.win,gameStage+1));
+                    mainWindow.setScreen(new ContinueScreen(terminal,mainWindow,ContinueScreen.win,gameStage+1,archiveNumber));
                     cancel();
                 }
             }
