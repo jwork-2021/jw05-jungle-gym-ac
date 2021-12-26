@@ -444,7 +444,6 @@ public class AsciiPanel extends JPanel {
                     if(charStringMap.containsKey((char)i)){
                         URL url=AsciiPanel.class.getClassLoader().getResource(
                             "images/"+charStringMap.get((char)i)+".png");
-                        //System.out.println(url);
                         custmoImage=ImageIO.read(url);
                         glyphs[i].getGraphics().drawImage(custmoImage,0, 0, charWidth, charHeight, 0, 0, charWidth,
                         charHeight, null);

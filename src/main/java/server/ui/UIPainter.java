@@ -1,6 +1,7 @@
 package server.ui;
 import java.util.TimerTask;
 
+import server.mainWindow.EchoNIOServer;
 import server.mainWindow.MainWindow;
 
 /**
@@ -10,14 +11,15 @@ import server.mainWindow.MainWindow;
  */
 public class UIPainter extends TimerTask{ //
     public static final int repaintInterval=90; //in millises
-    private MainWindow mainWindow;
-    public UIPainter(MainWindow mainWindow){
-        this.mainWindow=mainWindow;
+    private EchoNIOServer server;
+    public UIPainter(EchoNIOServer server){
+        this.server=server;
     }
     
     @Override
     public void run() {
-        mainWindow.repaint();
+        server.mainWindow.repaint();
+        server.writeToAllChannels();
     }
 
 }

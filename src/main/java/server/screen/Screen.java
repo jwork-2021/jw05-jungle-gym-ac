@@ -58,7 +58,8 @@ public abstract class Screen{
     public void clearScreen(){
         for(int x=0;x<MainWindow.width;x++)
             for(int y=0;y<MainWindow.height;y++){
-                terminal.write((char)0,x,y,AsciiPanel.white);
+                terminal.write((char)0,x,y);
+                terminal.writeEffect((char)0, x, y);
         }
     }
 

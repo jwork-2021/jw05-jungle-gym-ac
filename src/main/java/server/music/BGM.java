@@ -19,7 +19,7 @@ public class BGM {
       
     // current status of clip
     private String status;
-    //MainWindoe
+    //MainWindow
     MainWindow mainWindow;
     
     AudioInputStream audioInputStream;

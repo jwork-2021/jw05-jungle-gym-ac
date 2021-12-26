@@ -9,15 +9,13 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
 
 import javax.sound.sampled.LineUnavailableException;
-import javax.swing.JFrame;
+
+import server.ui.UIPainter;
 
 /**
  * 
@@ -31,12 +29,9 @@ public class EchoNIOServer {
 	private final static int PORT = 9093;
 
 	private ByteBuffer readBuffer,writeBuffer;
-	//modified
-	private MainWindow mainWindow;
+	public MainWindow mainWindow;
 	public static final int PlayerNumber=2;
-	//private final HashMap<SelectionKey,Integer> KeyPlayerIdMap=new HashMap<>();
 	private int connectedPlayerNumber=0;
-	//
 
 
 	public static void main(String[] args) throws Exception {
@@ -58,7 +53,7 @@ public class EchoNIOServer {
 	 */
 	private void startServer() throws IOException {
 		readBuffer=ByteBuffer.allocate(64);
-		writeBuffer = ByteBuffer.allocate(MainWindow.width*MainWindow.height*2*(Character.SIZE/Byte.SIZE)); //chars and effects	
+		writeBuffer = ByteBuffer.allocate(Character.SIZE/Byte.SIZE+MainWindow.width*MainWindow.height*2*(Character.SIZE/Byte.SIZE)); //chars and effects	
 
 		this.selector = Selector.open();
 		ServerSocketChannel serverChannel = ServerSocketChannel.open();
@@ -104,36 +99,33 @@ public class EchoNIOServer {
 			e.printStackTrace();
 		}
 		
-
+		new Timer().scheduleAtFixedRate(new UIPainter(this), 500,UIPainter.repaintInterval);
 
 		//read & write mode
-		while (selector.keys().size()>0) { 
+		while (true) { 
 			// wait for events
-			
-			int readyCount = selector.select();
-			if (readyCount == 0) {
-				continue;
-			}
-
-			// process selected keys...
-			Set<SelectionKey> readyKeys = selector.selectedKeys();
-			Iterator iterator = readyKeys.iterator();
-			while (iterator.hasNext()) {
-				SelectionKey key = (SelectionKey) iterator.next();
-
-				// Remove key from set so we don't process it twice
-				iterator.remove();
-
-				if (!key.isValid()) {
+				int readyCount = selector.select();
+				if (readyCount == 0) {
 					continue;
 				}
-				
-				if (key.isReadable()) { // Read from client
-					this.read(key);
-				} else if (key.isWritable()) {
-					// write data to client...
+
+				// process selected keys...
+				Set<SelectionKey> readyKeys = selector.selectedKeys();
+				Iterator iterator = readyKeys.iterator();
+				while (iterator.hasNext()) {
+					SelectionKey key = (SelectionKey) iterator.next();
+	
+					// Remove key from set so we don't process it twice
+					iterator.remove();
+	
+					if (!key.isValid()) {
+						continue;
+					}
+					
+					if (key.isReadable()) { // Read from client
+						this.read(key);
+					} 
 				}
-			}
 		}
 	}
 
@@ -173,17 +165,51 @@ public class EchoNIOServer {
 			return;
 		}
 
-		/*byte[] data = new byte[numRead];
-		System.arraycopy(readBuffer.array(), 0, data, 0, numRead);		
-		System.out.println("Got: " + new String(data));*/
-
 		//TODO:Write and read 1 key at a time,or mutiple?
 		numRead=numRead/(Integer.SIZE/Byte.SIZE);
 		readBuffer.flip();
-		//System.out.println(numRead);
 		for (int i=0;i<numRead;i++){
 			mainWindow.respondToUserInput(readBuffer.getInt(),(Integer)key.attachment());
 		}
 		readBuffer.clear();
 	}
+	private void write(SelectionKey key){
+		SocketChannel channel = (SocketChannel) key.channel();
+		writeBuffer.clear();
+		//backgroundImage
+		writeBuffer.putChar(mainWindow.getBackgroundImageIndex());
+		for(int x=0;x<MainWindow.width;x++)
+            for(int y=0;y<MainWindow.height;y++){
+				writeBuffer.putChar(mainWindow.getChar(x,y));
+			}
+		for(int x=0;x<MainWindow.width;x++)
+            for(int y=0;y<MainWindow.height;y++){
+				writeBuffer.putChar(mainWindow.getEffect(x,y));
+			}
+		writeBuffer.flip();
+		int writeBytes=-1;
+		while(writeBuffer.hasRemaining()){
+			try {
+				writeBytes=channel.write(writeBuffer);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		writeBuffer.clear();
+	}
+
+	public void writeToAllChannels(){
+			// process every key...
+			Set<SelectionKey> keys = selector.keys();
+			Iterator iterator = keys.iterator();
+			while (iterator.hasNext()) {
+				SelectionKey key = (SelectionKey) iterator.next();
+	
+				if (!key.isValid()||key.attachment()==null) { //skip the listening channel
+					continue;
+				}
+				this.write(key);
+			}
+	}
+
 }

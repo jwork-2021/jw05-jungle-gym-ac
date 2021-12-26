@@ -82,7 +82,7 @@ public class WorldScreen extends Screen {
             terminal.write(AsciiPanel.stringCharMap.get("Destination"),world.map.getEndX(),world.map.getEndY());
         else{ //终点出现了就不显示武器了
             for(Player player:players){
-                if(player.weapon.isVisible()){
+                if(player.weapon.isVisible()&&player.getHp()>0){
                     terminal.write(player.weapon.getGlyph(),player.weapon.getX(),player.weapon.getY(),AsciiPanel.white);
                 }  
             }
@@ -125,7 +125,6 @@ public class WorldScreen extends Screen {
 
     @Override
     public void respondToUserInput(int KeyCode,int playerNumber) {
-        //System.out.println("a");
         synchronized(players[playerNumber].keyEventBuffer){
             players[playerNumber].keyEventBuffer.add(KeyCode);
         }        

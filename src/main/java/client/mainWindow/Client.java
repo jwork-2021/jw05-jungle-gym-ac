@@ -2,16 +2,10 @@ package client.mainWindow;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 import javax.sound.sampled.LineUnavailableException;
-
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
 
 /**
  * 
@@ -28,26 +22,10 @@ public class Client {
 
 	public Client(){
 		hostAddress= new InetSocketAddress("localhost", 9093);
-
-		//String threadName = Thread.currentThread().getName();
-
-		// Send messages to server
-		//String[] messages = new String[] { threadName + ": msg1", threadName + ": msg2", threadName + ": msg3" };
-
-		/*for (int i = 0; i < messages.length; i++) {
-			ByteBuffer buffer = ByteBuffer.allocate(74);
-			buffer.put(messages[i].getBytes());
-			buffer.flip();
-			client.write(buffer); //Writes a sequence of bytes to this channel from the given buffer.
-			System.out.println(messages[i]);
-			buffer.clear();
-			Thread.sleep(5000);
-		}*/
-		//client.close();
 	}
 	private void startClient() throws IOException{
 		client= SocketChannel.open(hostAddress);
-        readBuffer = ByteBuffer.allocate(MainWindow.width*MainWindow.height*2*(Character.SIZE/Byte.SIZE)); //chars and effects	
+        readBuffer = ByteBuffer.allocate(Character.SIZE/Byte.SIZE+MainWindow.width*MainWindow.height*2*(Character.SIZE/Byte.SIZE)); //chars and effects	
 		writeBuffer=ByteBuffer.allocate(64);
 
 		try {
@@ -92,7 +70,18 @@ public class Client {
 			e.printStackTrace();
 		}
 		readBuffer.flip();
-		//mainWindow.repaint();
+
+		mainWindow.setBackgroundImageIndex(readBuffer.getChar());
+		for(int x=0;x<MainWindow.width;x++)
+            for(int y=0;y<MainWindow.height;y++){
+				mainWindow.writeChar(readBuffer.getChar(),x,y);
+			}
+		for(int x=0;x<MainWindow.width;x++)
+            for(int y=0;y<MainWindow.height;y++){
+				mainWindow.writeEffect(readBuffer.getChar(),x,y);
+			}		
+		mainWindow.repaint();
+
 		readBuffer.clear();
 	}
 }

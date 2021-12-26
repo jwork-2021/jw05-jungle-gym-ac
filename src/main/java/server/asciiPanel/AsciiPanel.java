@@ -15,13 +15,14 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import javafx.scene.effect.Effect;
+
 /**
  * This simulates a code page 437 ASCII terminal display.
  * 
  * @author Trystan Spangler
  */
-public class AsciiPanel extends JPanel {
-    private static final long serialVersionUID = -4167851861147593092L;
+public class AsciiPanel{
 
     public static Map<Character,String> charStringMap=new HashMap<Character,String>();
     public static Map<String,Character> stringCharMap=new HashMap<String,Character>();
@@ -154,6 +155,13 @@ public class AsciiPanel extends JPanel {
     private char[][] oldEffects;
     public char backgroundImageIndex;
     public char oldBackgroundImageIndex;
+
+    public char getChar(int x,int y){
+        return chars[x][y];
+    }
+    public char getEffect(int x,int y){
+        return effects[x][y];
+    }
 
     /**
      * Gets the height, in pixels, of a character.
@@ -320,7 +328,7 @@ public class AsciiPanel extends JPanel {
         this.terminalFontFile = font.getFontFilename();
 
         Dimension panelSize = new Dimension(charWidth * widthInCharacters, charHeight * heightInCharacters);
-        setPreferredSize(panelSize);
+        //setPreferredSize(panelSize);
 
         glyphs = new BufferedImage[256];
 
@@ -391,44 +399,7 @@ public class AsciiPanel extends JPanel {
         setAsciiFont(font);
     }
 
-    @Override
-    public void update(Graphics g) {
-        paint(g);
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        if (g == null)
-            throw new NullPointerException();
-
-        for (int x = 0; x < widthInCharacters; x++) {
-            for (int y = 0; y < heightInCharacters; y++) {
-                if (//(oldBackgroundColors[x][y] == backgroundColors[x][y]
-                        //&& oldForegroundColors[x][y] == foregroundColors[x][y] && 
-                        oldBackgroundImageIndex==backgroundImageIndex
-                        &&oldChars[x][y] == chars[x][y]
-                        && oldEffects[x][y] == effects[x][y])
-                    continue;
-
-                Color bg = backgroundColors[x][y];
-                Color fg = foregroundColors[x][y];
-                //LookupOp op = setColors(bg, fg);
-                //BufferedImage img = glyphs[chars[x][y]];
-                offscreenGraphics.drawImage(glyphs[backgroundImageIndex], x * charWidth, y * charHeight, null);
-                offscreenGraphics.drawImage(glyphs[chars[x][y]], x * charWidth, y * charHeight, null);
-                if(effects[x][y]!=(char)0)                
-                    offscreenGraphics.drawImage(glyphs[effects[x][y]], x * charWidth, y * charHeight, null);
-
-                oldBackgroundColors[x][y] = backgroundColors[x][y];
-                oldForegroundColors[x][y] = foregroundColors[x][y];
-                oldChars[x][y] = chars[x][y];
-                oldEffects[x][y]=effects[x][y];
-                oldBackgroundImageIndex=backgroundImageIndex;
-            }
-        }
-
-        g.drawImage(offscreenBuffer, 0, 0, this);
-    }
+    
 
     private void loadGlyphs() {
 
@@ -444,7 +415,6 @@ public class AsciiPanel extends JPanel {
                     if(charStringMap.containsKey((char)i)){
                         URL url=AsciiPanel.class.getClassLoader().getResource(
                             "images/"+charStringMap.get((char)i)+".png");
-                        //System.out.println(url);
                         custmoImage=ImageIO.read(url);
                         glyphs[i].getGraphics().drawImage(custmoImage,0, 0, charWidth, charHeight, 0, 0, charWidth,
                         charHeight, null);

@@ -11,6 +11,7 @@ public class Vampire extends Monster{
     private static final int ActionInterval= 500;//in milliseconds
     private static final int AttackCoolingCount=10;//5 actionIntervals
     private int attackCoolingCount=AttackCoolingCount; //4 actionIntervals
+    private Player target;
 
     public Vampire(World world){
         super(world, HP, Damage, ActionInterval);
@@ -22,6 +23,7 @@ public class Vampire extends Monster{
         //TODO: randomly select a player and attack
         attackCoolingCount--;
         if(attackCoolingCount<=0){
+            target=world.players[rand.nextInt(world.players.length)];
             if(rand.nextInt(2)==0){
                 if(tryMoveX()){
                     attackX();
@@ -47,8 +49,8 @@ public class Vampire extends Monster{
         int x=0;
         for(int i=0;i<world.WIDTH;i++){ //try world.WIDTH number of times
             x=rand.nextInt(world.WIDTH);
-            if(world.get(x,world.players[0].getY()) instanceof Nothing && world.players[0].getHp()>0
-                &&world.put(this, x,world.players[0].getY())){
+            if(world.get(x,target.getY()) instanceof Nothing && target.getHp()>0
+                &&world.put(this, x,target.getY())){
                     world.empty(oldX, oldY);
                     return true;
                 }
@@ -60,8 +62,8 @@ public class Vampire extends Monster{
         int y=0;
         for(int i=0;i<world.HEIGHT;i++){ //try world.HEIGHT number of times
             y=rand.nextInt(world.HEIGHT);
-            if(world.get(world.players[0].getX(),y) instanceof Nothing && world.players[0].getHp()>0
-                &&world.put(this, world.players[0].getX(),y)){
+            if(world.get(target.getX(),y) instanceof Nothing && target.getHp()>0
+                &&world.put(this, target.getX(),y)){
                     world.empty(oldX, oldY);
                     return true;
                 }
@@ -69,7 +71,7 @@ public class Vampire extends Monster{
         return false;
     }
     private void attackX(){
-        if(world.players[0].getX()<=getX())
+        if(target.getX()<=getX())
             for(int i=-3;i<=3;i++)
                 world.addBullet(new MagicBall(world, damage,range ,left, getX(), getY()+i));
         else
@@ -78,7 +80,7 @@ public class Vampire extends Monster{
 
     }
     private void attackY(){
-        if(world.players[0].getY()<=getY())
+        if(target.getY()<=getY())
             for(int i=-3;i<=3;i++)
                 world.addBullet(new MagicBall(world, damage,range ,up, getX()+i, getY()));
         else

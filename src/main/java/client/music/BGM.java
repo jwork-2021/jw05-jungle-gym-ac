@@ -9,7 +9,6 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import client.mainWindow.MainWindow;
-import client.screen.ContinueScreen;
 
 public class BGM {
     
