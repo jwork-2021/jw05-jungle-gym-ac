@@ -31,7 +31,7 @@ public class BGM {
         // create clip reference
         clip = AudioSystem.getClip();
     }
-    public void setAudioStream()throws UnsupportedAudioFileException,
+    /*public void setAudioStream()throws UnsupportedAudioFileException,
     IOException, LineUnavailableException {
         stop();
         // create AudioInputStream object
@@ -51,7 +51,7 @@ public class BGM {
         clip.open(audioInputStream);
         clip.loop(Clip.LOOP_CONTINUOUSLY);
         play();
-    }
+    }*/
     public void play(){
         clip.start();
     }

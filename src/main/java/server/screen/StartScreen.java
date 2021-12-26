@@ -11,7 +11,7 @@ import server.mainWindow.MainWindow;
 
 public class StartScreen extends Screen {
     private static final int oldOrNewGame=0,chooseHero=1;
-    protected int userInterfaceState;
+    protected int userInterfaceState=oldOrNewGame;
 
     private int[] gameArchive=new int[6];
     private int cursor=0;
@@ -65,15 +65,16 @@ public class StartScreen extends Screen {
     }
 
     @Override
-    public void respondToUserInput(int KeyCode,int playerNumber) {
+    public void respondToUserInput(int keyCode,int playerNumber) {
         if(userInterfaceState==oldOrNewGame)
-            respondOldOrNewGame(key);
+            respondToOldOrNewGame(keyCode,playerNumber);
         else
-            respondToCharacterChossingInput(key);
+            respondToCharacterChoosingInput(keyCode,playerNumber);
     }
 
-    public void respondOldOrNewGame(KeyEvent key){
-        switch (key.getKeyCode()) {
+    public void respondToOldOrNewGame(int keyCode,int playerNumber){
+        if(playerNumber!=0)return;
+        switch (keyCode) {
             case KeyEvent.VK_ENTER:
                 gameStage=gameArchive[cursor];
                 userInterfaceState=chooseHero;

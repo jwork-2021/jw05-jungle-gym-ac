@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import server.asciiPanel.AsciiPanel;
 import server.game.creature.Player;
+import server.mainWindow.EchoNIOServer;
 import server.mainWindow.MainWindow;
 /**
  *
@@ -20,6 +21,9 @@ public abstract class Screen{
 
     public static final int archer=0,wizard=1;
     protected int character=archer;
+
+    private int currentPlayerNumber=0;
+    private int[] playerType=new int[EchoNIOServer.PlayerNumber];
 
     protected static final String cursorString=Character.toString(AsciiPanel.stringCharMap.get("Cursor"));
 
@@ -85,16 +89,15 @@ public abstract class Screen{
         MessageList.put("icon",icon);
     }
 
-    protected void respondToCharacterChossingInput(KeyEvent key){
-        switch (key.getKeyCode()) {
+    protected void respondToCharacterChoosingInput(int keyCode,int playerNumber){
+        if(playerNumber!=currentPlayerNumber)return;
+        switch (keyCode) {
             case KeyEvent.VK_ENTER:
-                switch(character){
-                    case archer:
-                        mainWindow.setScreen(new WorldScreen(terminal,mainWindow,Player.ARCHER,gameStage,archiveNumber));
-                        break;
-                    default:
-                        mainWindow.setScreen(new WorldScreen(terminal,mainWindow,Player.WIZARD,gameStage,archiveNumber));
-                        break;
+                    playerType[currentPlayerNumber]=character;
+                    character=archer;
+                    currentPlayerNumber++;
+                if(currentPlayerNumber>=playerType.length){
+                    mainWindow.setScreen(new WorldScreen(terminal,mainWindow,playerType,gameStage,archiveNumber));
                 }
                 break;
             case KeyEvent.VK_UP:
@@ -108,7 +111,7 @@ public abstract class Screen{
 
     public void displayCharacterChoosingMessage(){
         int startLineNumber=MainWindow.height/2-2;
-        terminal.writeCenter(MessageList.get("choose_character_message"),startLineNumber++,AsciiPanel.green,AsciiPanel.white);
+        terminal.writeCenter("Player "+currentPlayerNumber+" :"+MessageList.get("choose_character_message"),startLineNumber++,AsciiPanel.green,AsciiPanel.white);
         if(character==archer){
             terminal.writeCenter(cursorString+MessageList.get("archer_message"),startLineNumber++,AsciiPanel.green,AsciiPanel.white);
             terminal.writeCenter(MessageList.get("wizard_message"),startLineNumber++,AsciiPanel.green,AsciiPanel.white);
@@ -118,9 +121,5 @@ public abstract class Screen{
             terminal.writeCenter(cursorString+MessageList.get("wizard_message"),startLineNumber++,AsciiPanel.green,AsciiPanel.white);
         }
         terminal.writeCenter(MessageList.get("exit_message"),startLineNumber++,AsciiPanel.green,AsciiPanel.white);
-
     }
-
-  
-
 }

@@ -59,11 +59,11 @@ public class ContinueScreen extends Screen {
         //terminal.write(exit_message,(World.WIDTH-exit_message.length())/2, (World.HEIGHT-num_of_lines)/2+2);
     
     @Override
-    public void respondToUserInput(int KeyCode,int playerNumber) {
+    public void respondToUserInput(int keyCode,int playerNumber) {
         if(userInterfaceState==replayOrContinue)
-            respondToReplayOrContinueInput(key);
+            respondToReplayOrContinueInput(keyCode,playerNumber);
         else
-            respondToCharacterChossingInput(key);
+            respondToCharacterChoosingInput(keyCode,playerNumber);
     }
 
     
@@ -83,8 +83,9 @@ public class ContinueScreen extends Screen {
 
     
 
-    public void respondToReplayOrContinueInput(KeyEvent key){
-        switch (key.getKeyCode()){
+    public void respondToReplayOrContinueInput(int keyCode,int playerNumber){
+        if(playerNumber!=0)return;
+        switch (keyCode){
             case KeyEvent.VK_ENTER:
                 userInterfaceState=chooseCharacter;
                 break;

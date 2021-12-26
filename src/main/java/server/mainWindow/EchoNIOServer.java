@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.swing.JFrame;
+
 /**
  * 
  * This is a simple NIO based server.
@@ -27,10 +30,11 @@ public class EchoNIOServer {
 	private InetSocketAddress listenAddress;
 	private final static int PORT = 9093;
 
+	private ByteBuffer readBuffer,writeBuffer;
 	//modified
 	private MainWindow mainWindow;
-	public static final int PlayerNumber=3;
-	private final HashMap<SelectionKey,Integer> KeyPlayerIdMap=new HashMap<>();
+	public static final int PlayerNumber=2;
+	//private final HashMap<SelectionKey,Integer> KeyPlayerIdMap=new HashMap<>();
 	private int connectedPlayerNumber=0;
 	//
 
@@ -53,6 +57,9 @@ public class EchoNIOServer {
 	 * @throws IOException
 	 */
 	private void startServer() throws IOException {
+		readBuffer=ByteBuffer.allocate(64);
+		writeBuffer = ByteBuffer.allocate(MainWindow.width*MainWindow.height*2*(Character.SIZE/Byte.SIZE)); //chars and effects	
+
 		this.selector = Selector.open();
 		ServerSocketChannel serverChannel = ServerSocketChannel.open();
 		serverChannel.configureBlocking(false);
@@ -89,8 +96,14 @@ public class EchoNIOServer {
 				} 
 			}
 		}
+		System.out.println("finish connecting");
 		//notify all,set the Game
-		mainWindow=new MainWindow();
+		try {
+			mainWindow=new MainWindow(this);
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		}
+		
 
 
 		//read & write mode
@@ -137,19 +150,19 @@ public class EchoNIOServer {
 		 * Register channel with selector for further IO (record it for read/write
 		 * operations, here we have used read operation)
 		 */
-		channel.register(this.selector, SelectionKey.OP_READ);
+		channel.register(this.selector, SelectionKey.OP_READ,connectedPlayerNumber);
 
-		KeyPlayerIdMap.put(key, connectedPlayerNumber);
 		connectedPlayerNumber++;
 		System.out.println("connectedPlayerNumber: "+connectedPlayerNumber);
+		
 	}
 
 	// read from the socket channel
 	private void read(SelectionKey key) throws IOException {
 		SocketChannel channel = (SocketChannel) key.channel();
-		ByteBuffer buffer = ByteBuffer.allocate(1024);
+		readBuffer.clear();
 		int numRead = -1;
-		numRead = channel.read(buffer);
+		numRead = channel.read(readBuffer);
 
 		if (numRead == -1) {
 			Socket socket = channel.socket();
@@ -159,12 +172,18 @@ public class EchoNIOServer {
 			key.cancel();
 			return;
 		}
+
+		/*byte[] data = new byte[numRead];
+		System.arraycopy(readBuffer.array(), 0, data, 0, numRead);		
+		System.out.println("Got: " + new String(data));*/
+
 		//TODO:Write and read 1 key at a time,or mutiple?
 		numRead=numRead/(Integer.SIZE/Byte.SIZE);
-		int[] data = new int[numRead];
-		for (int keyCode:buffer.asIntBuffer().array()){
-			mainWindow.respondToUserInput(keyCode,KeyPlayerIdMap.get(key));
+		readBuffer.flip();
+		//System.out.println(numRead);
+		for (int i=0;i<numRead;i++){
+			mainWindow.respondToUserInput(readBuffer.getInt(),(Integer)key.attachment());
 		}
-		//System.out.println("Got: " + data.length);
+		readBuffer.clear();
 	}
 }

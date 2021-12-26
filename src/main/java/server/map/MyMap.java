@@ -32,6 +32,9 @@ public class MyMap {
      */
     public MyMap(int width,int height,int gameStage) {
         map = new int[width][height];
+        for(int i=0;i<width;i++)
+            for(int j=0;j<height;j++)
+                map[i][j]=wall;
         this.width=width;
         this.height=height;
         generateMap();
@@ -39,7 +42,7 @@ public class MyMap {
     }
 
     public void generateMap() {
-        //generate random start&end points
+        //generate random starting points
         for(int i=0;i<startX.length;i++){
             switch(i%4){//(rand.nextInt(4)){
                 case 0:
@@ -59,17 +62,20 @@ public class MyMap {
                     startX[i]=rand.nextInt(width);
                     break;
             }
+            map[startX[i]][startY[i]]=start;
         }
-        
-
         //perform DFS,set the endPoint as the FURTHEST node away from the start!!
         int maxDis=0;
         stack.push(new Node(startX[0],startY[0]));
         while (!stack.empty()) {
             Node next = stack.pop();
             if (validNextNode(next)) {
-                
-                map[next.x][next.y] = tile;
+                if(getDistance(startX[0], startY[0], next.x, next.y)>maxDis){
+                    maxDis=getDistance(startX[0], startY[0], next.x, next.y);
+                    endX=next.x;
+                    endY=next.y;
+                }
+                if(map[next.x][next.y]!=start)map[next.x][next.y] = tile;
                 ArrayList<Node> neighbors = findNeighbors(next);
                 randomlyAddNodesToStack(neighbors);
             }
@@ -86,8 +92,8 @@ public class MyMap {
         int countMonsterNumber=totalMonsterNumber;
         for (int i = 0; i < width; i++) 
             for (int j = 0; j < height; j++){
-                if(i==startX && j==startY)continue;
-                if(map[i][j]==wall)continue;
+                //if(i==startX && j==startY)continue;
+                if(map[i][j]!=tile)continue;
                 if(rand.nextInt(width*height/totalMonsterNumber)==0){
                     countMonsterNumber--;
                     monsterPositions.put(i,j);
@@ -99,11 +105,11 @@ public class MyMap {
     private int getDistance(int X1,int Y1,int X2,int Y2){
         return Math.abs(X1-X2)+Math.abs(Y1-Y2);
     }
-    public int[] getStartX(){
-        return startX;
+    public int getStartX(int playerNumber){
+        return startX[playerNumber];
     }
-    public int[] getStartY(){
-        return startY;
+    public int getStartY(int playerNumber){
+        return startY[playerNumber];
     }
     public int getEndX(){
         return endX;
@@ -122,12 +128,12 @@ public class MyMap {
         int numNeighboringOnes = 0;
         for (int y = node.y-1; y < node.y+2; y++) {
             for (int x = node.x-1; x < node.x+2; x++) {
-                if (pointOnGrid(x, y) && pointNotNode(node, x, y) && map[x][y] == tile) {
+                if (pointOnGrid(x, y) && pointNotNode(node, x, y) && map[x][y] != wall) {
                     numNeighboringOnes++;
                 }
             }
         }
-        return (numNeighboringOnes < 8); //必然小于九，此时这个函数等价于只有第一行
+        return (numNeighboringOnes < 8); //必然小于九
     }
 
     private void randomlyAddNodesToStack(ArrayList<Node> nodes) {

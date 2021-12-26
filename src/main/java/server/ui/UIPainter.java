@@ -17,7 +17,7 @@ public class UIPainter extends TimerTask{ //
     
     @Override
     public void run() {
-        mainWindow.refresh();
+        mainWindow.repaint();
     }
 
 }

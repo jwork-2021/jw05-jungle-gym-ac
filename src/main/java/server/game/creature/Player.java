@@ -17,7 +17,7 @@ public abstract class Player extends Creature{
     protected static int playerDamage=100;
     protected static int playerRange=8;
     private static int ActionInterval= 100;//in milliseconds    
-    public ArrayList<KeyEvent> keyEventBuffer=new ArrayList<KeyEvent>();
+    public ArrayList<Integer> keyEventBuffer=new ArrayList<Integer>();
 
     public Player(World world) {
         super(world,playerHP,playerDamage,ActionInterval);
@@ -36,7 +36,7 @@ public abstract class Player extends Creature{
                 TimeUnit.MILLISECONDS.sleep(actionInterval);
                 synchronized(this){
                     if(keyEventBuffer.size()>0){
-                            switch(keyEventBuffer.get(0).getKeyCode()){
+                            switch(keyEventBuffer.get(0)){
                                 case KeyEvent.VK_LEFT:
                                     moveLeft();;
                                     break;

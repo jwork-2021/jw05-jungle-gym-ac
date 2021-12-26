@@ -20,16 +20,17 @@ import client.ui.UIPainter;
  */
 public class MainWindow extends JFrame implements KeyListener {  
 
+    private Client client;
     private AsciiPanel terminal;
     //private Screen screen;
-    private UIPainter uiPainter;
+    //private UIPainter uiPainter;
     private Timer uiTimer;
-    public BGM bgm;
+    //public BGM bgm;
     public static final int width=55;
     public static final int height=30;
     //TODO:different gameStages Restartscreen()中win了，gameStage++
 
-    public MainWindow() throws LineUnavailableException {
+    public MainWindow(Client client) throws LineUnavailableException {
         super("Roguelike");
         setIconImage(new ImageIcon(MainWindow.class.getClassLoader().getResource("images/icon.png")).getImage());
 
@@ -38,19 +39,23 @@ public class MainWindow extends JFrame implements KeyListener {
         add(terminal);
         pack();
     
+
+        //Client
+        this.client=client;
     //BGM,need to set before setScreen()
-    bgm=new BGM(this);
-    //Screen
-        setScreen(new StartScreen(terminal,this,0));  //开始屏幕
+    //bgm=new BGM(this);
+    //setScreen(new StartScreen(terminal,this,0));  //开始屏幕
 
     //keyListener
         addKeyListener(this);
         //TODO:implement a KeyListener's SubClass instead of mixing KeyListner and Main Function Together 
         //change addKeyListener(this) to addKeyListener(.....)
     //UIPainter
-        uiPainter=new UIPainter(this);
+        /*uiPainter=new UIPainter(this);
         uiTimer=new Timer();
-        uiTimer.scheduleAtFixedRate(uiPainter, 0,UIPainter.repaintInterval);    
+        uiTimer.scheduleAtFixedRate(uiPainter, 0,UIPainter.repaintInterval);  */
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
     }
 
     
@@ -68,7 +73,7 @@ public class MainWindow extends JFrame implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        screen.respondToUserInput(e);
+		client.writeToChannel(e.getKeyCode());
     }
 
     @Override
@@ -76,7 +81,7 @@ public class MainWindow extends JFrame implements KeyListener {
 
     }
 
-    public void setScreen(Screen screen){
+    /*public void setScreen(Screen screen){
         this.screen=screen;
         try {
             bgm.setAudioStream();
@@ -93,9 +98,9 @@ public class MainWindow extends JFrame implements KeyListener {
     }
     public Screen getScreen(){
         return screen;
-    }
+    }*/
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         MainWindow app;
         try {
             app = new MainWindow();
@@ -105,6 +110,6 @@ public class MainWindow extends JFrame implements KeyListener {
             System.err.println("BGM Interrupted");
             e.printStackTrace();
         }   
-    }
+    }*/
 
 }

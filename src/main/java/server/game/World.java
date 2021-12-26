@@ -35,7 +35,6 @@ public class World {
         map=new MyMap(WIDTH,HEIGHT,gameStage);
         this.gameStage=gameStage;
 
-
         if (tiles == null) {
             tiles = new Tile[WIDTH][HEIGHT];
         }
@@ -73,7 +72,7 @@ public class World {
                     players[i]=new Wizard(this);
                     break;
             }
-            put(players[i],map.getStartX(),map.getStartY());
+            put(players[i],map.getStartX(i),map.getStartY(i));
         }
         
         for(Player player:players)

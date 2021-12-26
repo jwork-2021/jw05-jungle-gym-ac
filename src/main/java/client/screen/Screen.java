@@ -90,10 +90,10 @@ public abstract class Screen{
             case KeyEvent.VK_ENTER:
                 switch(character){
                     case archer:
-                        mainWindow.setScreen(new WorldScreen(terminal,mainWindow,Player.ARCHER,gameStage,archiveNumber));
+                        //mainWindow.setScreen(new WorldScreen(terminal,mainWindow,Player.ARCHER,gameStage,archiveNumber));
                         break;
                     default:
-                        mainWindow.setScreen(new WorldScreen(terminal,mainWindow,Player.WIZARD,gameStage,archiveNumber));
+                        //mainWindow.setScreen(new WorldScreen(terminal,mainWindow,Player.WIZARD,gameStage,archiveNumber));
                         break;
                 }
                 break;

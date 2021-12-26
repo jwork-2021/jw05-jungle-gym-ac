@@ -19,6 +19,7 @@ public class Vampire extends Monster{
 
     @Override
     protected void action() {
+        //TODO: randomly select a player and attack
         attackCoolingCount--;
         if(attackCoolingCount<=0){
             if(rand.nextInt(2)==0){
@@ -46,8 +47,8 @@ public class Vampire extends Monster{
         int x=0;
         for(int i=0;i<world.WIDTH;i++){ //try world.WIDTH number of times
             x=rand.nextInt(world.WIDTH);
-            if(world.get(x,world.player.getY()) instanceof Nothing && world.player.getHp()>0
-                &&world.put(this, x,world.player.getY())){
+            if(world.get(x,world.players[0].getY()) instanceof Nothing && world.players[0].getHp()>0
+                &&world.put(this, x,world.players[0].getY())){
                     world.empty(oldX, oldY);
                     return true;
                 }
@@ -59,8 +60,8 @@ public class Vampire extends Monster{
         int y=0;
         for(int i=0;i<world.HEIGHT;i++){ //try world.HEIGHT number of times
             y=rand.nextInt(world.HEIGHT);
-            if(world.get(world.player.getX(),y) instanceof Nothing && world.player.getHp()>0
-                &&world.put(this, world.player.getX(),y)){
+            if(world.get(world.players[0].getX(),y) instanceof Nothing && world.players[0].getHp()>0
+                &&world.put(this, world.players[0].getX(),y)){
                     world.empty(oldX, oldY);
                     return true;
                 }
@@ -68,7 +69,7 @@ public class Vampire extends Monster{
         return false;
     }
     private void attackX(){
-        if(world.player.getX()<=getX())
+        if(world.players[0].getX()<=getX())
             for(int i=-3;i<=3;i++)
                 world.addBullet(new MagicBall(world, damage,range ,left, getX(), getY()+i));
         else
@@ -77,7 +78,7 @@ public class Vampire extends Monster{
 
     }
     private void attackY(){
-        if(world.player.getY()<=getY())
+        if(world.players[0].getY()<=getY())
             for(int i=-3;i<=3;i++)
                 world.addBullet(new MagicBall(world, damage,range ,up, getX()+i, getY()));
         else

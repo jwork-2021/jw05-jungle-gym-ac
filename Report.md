@@ -122,6 +122,8 @@ How to Generate UnitTest:https://code.visualstudio.com/docs/java/java-testing
 UnitTest in Maven and Coverage Gutter:https://medium.com/@karlrombauts/setting-up-unit-testing-for-java-in-vs-code-with-maven-3dc75579122f
 JaCoco:https://www.baeldung.com/jacoco
 
+NIO Selector
+https://www.waitingforcode.com/java-i-o/handling-multiple-io-one-thread-nio-selector/read
 
 LATEX：
 https://www.programmerall.com/article/83671358413/

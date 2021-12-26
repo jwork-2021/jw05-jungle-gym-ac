@@ -29,32 +29,33 @@ public abstract class Monster extends Creature{
     }
 
     protected void action(){
-        if(getX()==world.player.getX()&&getY()<world.player.getY()){
-            if(world.player.getY()-getY()<=range && world.player.getHp()>0){
+        //TODO:上下左右扫，得到最近距离的player及方向，再攻击/move
+        if(getX()==world.players[0].getX()&&getY()<world.players[0].getY()){
+            if(world.players[0].getY()-getY()<=range && world.players[0].getHp()>0){
                 attackDown();
             }
             else {
                 if(!moveDown())randomWalk();
             }
         }
-        else if(getX()==world.player.getX()&&getY()>world.player.getY()){
-            if(getY()-world.player.getY()<=range && world.player.getHp()>0){
+        else if(getX()==world.players[0].getX()&&getY()>world.players[0].getY()){
+            if(getY()-world.players[0].getY()<=range && world.players[0].getHp()>0){
                attackUp();
             }
             else{
                 if(!moveUp())randomWalk();;
             }
         } 
-        else if(getY()==world.player.getY()&&getX()<world.player.getX()){
-            if(world.player.getX()-getX()<=range && world.player.getHp()>0){
+        else if(getY()==world.players[0].getY()&&getX()<world.players[0].getX()){
+            if(world.players[0].getX()-getX()<=range && world.players[0].getHp()>0){
                attackRight();
             }
             else{
                 if(!moveRight())randomWalk();;
             }
         }
-        else if(getY()==world.player.getY()&&getX()>world.player.getX()){
-            if(getX()-world.player.getX()<=range && world.player.getHp()>0){
+        else if(getY()==world.players[0].getY()&&getX()>world.players[0].getX()){
+            if(getX()-world.players[0].getX()<=range && world.players[0].getHp()>0){
                 attackLeft();
             }
             else{

@@ -27,10 +27,10 @@ public class WorldScreen extends Screen {
         terminal.backgroundImageIndex= AsciiPanel.stringCharMap.get(backgroundStringName[gameStage%backgroundStringName.length]);
         world = new World(playerType,gameStage);
         player=world.player;
-        checkGameEnded();
+        //checkGameEnded();
     }
 
-    public void checkGameEnded(){
+   /* public void checkGameEnded(){
         //TODO:kill all Threads in world
         TimerTask task=new TimerTask() {
             public void run(){
@@ -51,7 +51,7 @@ public class WorldScreen extends Screen {
         };
         Timer timer=new Timer();
         timer.scheduleAtFixedRate(task, 0, 100);
-    }
+    }*/
 
     @Override
     public void displayOutput() {

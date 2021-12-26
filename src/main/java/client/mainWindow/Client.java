@@ -3,8 +3,15 @@ package client.mainWindow;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+
+import javax.sound.sampled.LineUnavailableException;
+
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 
 /**
  * 
@@ -13,19 +20,21 @@ import java.nio.channels.SocketChannel;
  */
 public class Client {
 
-	public void startClient() throws IOException, InterruptedException {
+	MainWindow mainWindow;
 
-		InetSocketAddress hostAddress = new InetSocketAddress("localhost", 9093);
-		SocketChannel client = SocketChannel.open(hostAddress);
+	private ByteBuffer readBuffer,writeBuffer;
+	private InetSocketAddress hostAddress;
+	private SocketChannel client;
 
-		System.out.println("Client... started");
+	public Client(){
+		hostAddress= new InetSocketAddress("localhost", 9093);
 
-		String threadName = Thread.currentThread().getName();
+		//String threadName = Thread.currentThread().getName();
 
 		// Send messages to server
-		String[] messages = new String[] { threadName + ": msg1", threadName + ": msg2", threadName + ": msg3" };
+		//String[] messages = new String[] { threadName + ": msg1", threadName + ": msg2", threadName + ": msg3" };
 
-		for (int i = 0; i < messages.length; i++) {
+		/*for (int i = 0; i < messages.length; i++) {
 			ByteBuffer buffer = ByteBuffer.allocate(74);
 			buffer.put(messages[i].getBytes());
 			buffer.flip();
@@ -33,26 +42,57 @@ public class Client {
 			System.out.println(messages[i]);
 			buffer.clear();
 			Thread.sleep(5000);
+		}*/
+		//client.close();
+	}
+	private void startClient() throws IOException{
+		client= SocketChannel.open(hostAddress);
+        readBuffer = ByteBuffer.allocate(MainWindow.width*MainWindow.height*2*(Character.SIZE/Byte.SIZE)); //chars and effects	
+		writeBuffer=ByteBuffer.allocate(64);
+
+		try {
+			mainWindow=new MainWindow(this);
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
 		}
-		client.close();
+		System.out.println("Client... started");
+		
+		while(client.isOpen()){
+			readFromChannel();
+		}
 	}
 
 	public static void main(String[] args) {
-		Runnable client = new Runnable() {
-			@Override
-			public void run() {
-				try {
-					new Client().startClient();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-
-			}
-		};
-		new Thread(client, "client-A").start();
-		new Thread(client, "client-B").start();
+		try {
+			new Client().startClient();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
+	public void writeToChannel(int keyCode){
+		writeBuffer.clear();
+		writeBuffer.putInt(keyCode);
+		writeBuffer.flip();
+		try {
+			client.write(writeBuffer);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		writeBuffer.clear();
+	}
+	private void readFromChannel(){
+		readBuffer.clear();
+		int readBytes=-1;
+		try {
+			while(readBuffer.hasRemaining()){//buffer not full,position()!=capacity or limit
+				readBytes=client.read(readBuffer);
+			};
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		readBuffer.flip();
+		//mainWindow.repaint();
+		readBuffer.clear();
+	}
 }

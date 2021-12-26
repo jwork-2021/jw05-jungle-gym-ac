@@ -22,10 +22,10 @@ public class WorldScreen extends Screen {
     /**
      * @param terminal
      */
-    public WorldScreen(AsciiPanel terminal,MainWindow mainWindow,int[] heroType,int gameStage,int archiveNumber) {
+    public WorldScreen(AsciiPanel terminal,MainWindow mainWindow,int[] playerType,int gameStage,int archiveNumber) {
         super(terminal,mainWindow,gameStage,archiveNumber);
         terminal.backgroundImageIndex= AsciiPanel.stringCharMap.get(backgroundStringName[gameStage%backgroundStringName.length]);
-        world = new World(heroType,gameStage);
+        world = new World(playerType,gameStage);
         players=world.players;
         checkGameEnded();
     }
@@ -110,10 +110,15 @@ public class WorldScreen extends Screen {
             for(int y=0;y<mainWindow.height;y++){
                 terminal.write((char)0,x,y,AsciiPanel.white);
             }
-        terminal.write("Stage "+Integer.toString(gameStage),world.WIDTH,0);
-        terminal.write("Press SPACE to attack!",world.WIDTH,1);
-        terminal.write("Your HP: "+Integer.toString(world.player.getHp()),world.WIDTH,2);
-        terminal.write(Integer.toString(world.monsterNumberLeft)+" Monster(s) Left!",world.WIDTH,3);
+        int startLineNumber=0;
+        terminal.write("Stage "+Integer.toString(gameStage),world.WIDTH,startLineNumber++);
+        terminal.write("Press SPACE to attack!",world.WIDTH,startLineNumber++);
+        terminal.write(world.monsterNumberLeft+" Monster(s) Left!",world.WIDTH,startLineNumber++);
+        startLineNumber++;
+
+        for(int i=0;i<players.length;i++){
+            terminal.write("Player "+i+ " HP: "+players[i].getHp(),world.WIDTH,startLineNumber++);
+        }
     }
 
     int i = 0;
