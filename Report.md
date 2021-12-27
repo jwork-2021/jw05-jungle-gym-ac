@@ -123,8 +123,14 @@ UnitTest in Maven and Coverage Gutter:https://medium.com/@karlrombauts/setting-u
 JaCoco:https://www.baeldung.com/jacoco
 
 NIO Selector
+https://medium.com/coderscorner/tale-of-client-server-and-socket-a6ef54a74763
+https://www.baeldung.com/java-nio-selector
+https://www.waitingforcode.com/java-i-o/handling-multiple-io-one-thread-nio-selector/read
+https://stackoverflow.com/questions/28275202/java-nio-on-write-confusion
+https://stackoverflow.com/questions/17556901/java-high-load-nio-tcp-server
 https://www.waitingforcode.com/java-i-o/handling-multiple-io-one-thread-nio-selector/read
 
 LATEX：
 https://www.programmerall.com/article/83671358413/
 https://www.cnblogs.com/li-minghao/p/10954487.html
+
