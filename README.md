@@ -1,7 +1,7 @@
 # JW06
 
 ## 视频地址
-
+https://www.bilibili.com/video/BV1MR4y137RQ?share_source=copy_web
 
 ## 单元测试结果
 ![](https://github.com/jwork-2021/jw05-jungle-gym-ac/blob/jw06/images/image-20211224172344362.png)
