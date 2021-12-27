@@ -1,11 +1,25 @@
-- JW05位于main分支下
-- JW06位于jw06分支下
-- JW07位于jw07分支下
-- 视频链接：
+# JW07
 
-JW06 单元测试结果：
+## 视频地址
 
-![image-20211224172344362](images/image-20211224172344362.png)
+
+
+## 运行方式
+
+```
+进入项目根目录
+
+mvn package
+
+启动Server: 
+java -cp .\target\Roguelike-1.0.0.jar server.mainWindow.EchoNIOServer
+
+启动Client:
+java -cp .\target\Roguelike-1.0.0.jar client.mainWindow.Client
+
+```
+
+
 
 
 
