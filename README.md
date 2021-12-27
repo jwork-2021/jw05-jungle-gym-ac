@@ -1,7 +1,7 @@
 - JW05位于**main**分支下
 - JW06位于**jw06**分支下
 - JW07位于**jw07**分支下
-- 视频链接：
+- 视频链接：https://www.bilibili.com/video/BV1MR4y137RQ?share_source=copy_web
 
 
 
