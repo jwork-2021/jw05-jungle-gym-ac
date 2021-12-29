@@ -1,0 +1,35 @@
+@startuml classes
+
+class MainWindow {
+
+}
+note top: extends JFrame implements KeyListener
+
+class UIPainter{
+
+}
+note top: extends TimerTask,\nPaint at a fixed rate
+
+class BGM
+
+class AsciiPanel
+note left:extends JPanel
+
+abstract class Screen
+
+class StartScreen
+
+class WorldScreen
+
+class ContinueScreen
+
+class world
+
+MainWindow *-- UIPainter:contains
+MainWindow *-- BGM:contains
+MainWindow *-- Screen:contains
+MainWindow *-- AsciiPanel:contains
+
+Screen <|-- StartScreen:inherits
+Screen <|-- ContinueScreen:inherits
+Screen <|-- WorldScreen:inherits

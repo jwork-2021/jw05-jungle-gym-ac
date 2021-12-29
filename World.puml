@@ -1,0 +1,30 @@
+@startuml classesInWorld
+class WorldScreen
+WorldScreen *-- World:contains
+class World
+
+
+class MyMap
+class Tile
+abstract class Thing
+abstract class Creature
+abstract class Player
+abstract class Monster
+
+World *-- MyMap:contains
+World "one"*--"many" Tile:contains
+World "one"*--"many" Player:contains
+World "one"*--"many" Monster:contains
+
+Thing <|-- Creature:inherits
+Creature <|-- Monster:inherits
+Creature <|-- Player:inherits
+
+abstract class Weapon
+Weapon *-- Player:contains
+
+class Bullet
+World "one"*--"many" Bullet:contains
+
+abstract class Obstacle
+Thing <|-- Obstacle:inherits
